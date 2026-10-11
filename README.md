@@ -1,53 +1,75 @@
-# Network Traffic Analysis Using Wireshark.
+# Network Traffic Analysis Using Wireshark
 
-## Project Overview: 
-This project demonstrates live network traffic capture and protocol analysis using Wireshark.
+## Project Overview
 
- We capture real-time packets while performing common network activities (ICMP pings and web browsing), then analyze ICMP, DNS, and TCP traffic in detail.
-Objectives:
+This project demonstrates how I used Wireshark to capture and analyze network traffic on a Linux machine.
 
-Capture live network traffic on the eth0 interface
-Generate traffic using ping and web browsing
-Apply display filters to isolate specific protocols
-Analyze ICMP, DNS, and TCP packet structures
+I generated network traffic by running ping commands and visiting websites in Firefox. I then used Wireshark display filters to examine three important network protocols: ICMP, DNS, and TCP.
 
-## Tools Used:
+This project helped me understand how devices communicate over a network and how Wireshark can be used to inspect that communication.
 
-Wireshark (latest version)
-Firefox Browser
-Linux Terminal (ping command)
+## Project Objectives
+
+The objectives of this project were to:
+
+Capture live network traffic using the eth0 network interface.
+Generate network traffic using the ping command and a web browser.
+Use Wireshark display filters to find specific protocols.
+Examine ICMP, DNS, and TCP packets.
+Understand how network traffic analysis can support troubleshooting and cybersecurity monitoring.
+
+## Tools Used
+Wireshark: Used to capture and analyze network packets.
+Firefox: Used to generate web traffic by visiting websites.
+Linux Terminal: Used to run the ping command and generate ICMP traffic.
 
 
-## Step-by-Step Procedure:
+# Step-by-Step Procedure:
 
-# Phase 1: Traffic Capture.
+# Phase 1
 
-## 1. Start Capturing Packets:
+## Step 1: Start Wireshark and Begin Capturing:
+
+I opened Wireshark and located the eth0 network interface.
+
+I double-clicked the interface to start capturing packets. Wireshark then displayed network packets as they were observed on the selected interface.
+
+Why this step matters:
+
+Capturing network traffic allows me to examine communication between my computer and other devices or servers.
 
 ![](./img/01.Capture_traffic_open_wireshark_doubleclick_eth0.png)
 
-Open Wireshark.
-
-In the network interfaces list, locate eth0 (your active Ethernet/Wi-Fi interface).
-
-Double-click on eth0 to begin capturing packets immediately.
-Wireshark starts displaying packets in real time.
-
-Alternative: Select eth0 and click the blue shark fin icon (▶).
 
 
-## 2. Generate ICMP Traffic
+## Step 2: Generate ICMP Traffic:
+
+I opened the Linux terminal and ran the following command:
+
+ping 8.8.8.8
+
+This command sends ICMP Echo Requests to 8.8.8.8, a public DNS server operated by Google. If replies are received, the terminal displays them.
+
+Why this step matters:
+
+The ping command helps test basic network connectivity. Capturing this traffic in Wireshark also allows me to examine ICMP requests and replies.
 
 ![](./img/02.0pen_a_terminal_and_run_ping_8_8_8_8.png)
 
 
-Open a terminal window.
-Run the following command:Bashping 8.8.8.8This sends continuous ICMP Echo Requests to Google’s public DNS server.
 
+## Step 3: Generate Web Traffic:
 
-## 3. Generate Web Traffic (DNS + TCP + HTTP/HTTPS)
-Screenshots:
+I opened Firefox and visited the following websites:
+https://google.com
+https://github.com
+https://wikipedia.org
 
+Visiting these websites generated network traffic associated with web browsing. Depending on the connection and browser configuration, this may include DNS queries, TCP connections, TLS traffic, and other protocols.
+
+Why this step matters:
+
+Web browsing generates traffic that can be examined to understand how applications communicate over a network.
 
 ![](./img/03a.Open_firefox_visit_google_com.png)
 
@@ -56,40 +78,62 @@ Screenshots:
 ![](./img/03c.Open_firefox_visit_wikipedia_org.png)
 
 
-Open Firefox.
 
-Visit the following websites one by one:
+## Step 4: Stop the Ping Command:
 
-- https://google.com
+I returned to the terminal where the ping command was running and pressed Ctrl + C to stop it.
 
-- https://github.com
-
-- https://wikipedia.org
-
-
-This generates DNS queries, TCP connections, and HTTPS traffic.
-
-
-## 4. Stop the Ping
+This stopped the continuous ping requests and displayed a summary of the results.
 
 ![](./img/04.Stop_the_ping.png)
 
-Return to the terminal running the ping command.
-Press Ctrl + C to stop the ping.
 
 
-## 5. Save the Capture
+## Step 5: Save the Packet Capture:
+
+I opened the File menu in Wireshark, selected Save As, and saved the capture as:
+
+network_analysis.pcapng
+
+The saved file contains the packets captured during the exercise.
+
+Why this step matters:
+
+Saving a packet capture allows me to reopen it later, repeat my analysis, and review network activity without having to perform the capture again
 
 ![](./img/05.Save_work.png)
 
-In Wireshark, go to File → Save As.
-
-Save the file as network_analysis.pcapng (or .pcap).
-
-This allows us to reopen and analyze the capture later.
 
 
-# Phase 2: ICMP Analysis:
+# Phase 2: ICMP Analysis
+
+
+## Step 1: Apply the ICMP Filter:
+
+I opened the saved capture in Wireshark and entered the following display filter:
+
+icmp
+
+I pressed Enter to display ICMP packets.
+
+Step 2: Examine the ICMP Packets
+
+I examined the ICMP packets generated by the ping command.
+
+The important packet types to look for are:
+
+Echo Request: A message sent to check whether the destination can respond. Its ICMP Type is 8.
+Echo Reply: A response to an Echo Request. Its ICMP Type is 0.
+
+Both normally use Code 0 for these messages.
+
+I also examined packet details such as source and destination IP addresses, sequence numbers, and timing information where available.
+
+What I Learned
+
+ICMP is used for network diagnostics and error reporting. The ping command uses ICMP Echo Requests and Echo Replies to help test connectivity.
+
+In a security monitoring context, understanding ICMP traffic can help an analyst investigate connectivity problems and recognize unusual patterns of network activity.
 
 ![](./img/06a.Phase_2_ICMP_analysis_open_the_capture.png)
 
@@ -97,104 +141,109 @@ This allows us to reopen and analyze the capture later.
 ![](./img/06b.Phase_2_in_the_filter_bar_type_icmp_press_enter_look_for_Echo_ping_request_Echo_ping_reply.png)
 
 
-Steps i took:
 
-Open the saved capture file in Wireshark.
+# Phase 3: DNS Analysis
 
-In the display filter bar (top green bar), type:wiresharkicmp
-Press Enter.
+## Step 1: Apply the DNS Filter:
 
-Look for packets with Protocol = ICMP.
+I cleared the previous display filter and entered:
 
-Key Observations:
+dns
 
-- Echo (ping) Request (Type = 8, Code = 0)
+I pressed Enter to display DNS packets in the capture.
 
-- Echo (ping) Reply (Type = 0, Code = 0)
+## Step 2: Examine DNS Queries and Responses:
 
-- Source IP = your local machine
-Destination IP = 8.8.8.8
+I examined the available DNS packets and looked for queries and responses associated with the websites visited during the exercise.
 
-- ICMP Sequence numbers match requests with replies
-Time-to-Live (TTL) and round-trip time can be observed.
+Important details to examine include:
 
+DNS Query: A request asking for information about a domain name.
+DNS Response: A reply containing the requested DNS information, if available.
+Domain Name: The website or hostname being queried.
+IP Address Records: DNS responses may contain IPv4 (A) or IPv6 (AAAA) records.
+Transaction ID: A value used to associate a DNS response with its corresponding query.
 
-# Phase 3: DNS Analysis.
+DNS commonly uses UDP port 53, although it can also use TCP port 53 in certain situations.
 
+What I Learned
+
+DNS helps translate domain names into IP addresses that computers can use to communicate.
+
+Analyzing DNS traffic helps me understand how devices look up domain names. In a SOC environment, DNS logs and packet captures can also help analysts investigate suspicious domain lookups and possible connections to malicious infrastructure.
 
 ![](./img/07.Phase_3_DNS_analysis.png)
 
-Steps:
-
-Clear the previous filter (click the red "X" or delete text).
-
-Apply the DNS filter:wiresharkdns
-Expand the DNS packet details.
-
-Key Observations:
-
-- Queries (Standard query) for domains like google.com, github.com, wikipedia.org.
-
-- Responses containing resolved IPv4 (A) and IPv6 (AAAA) records.
-
-- DNS uses UDP port 53 by default.
-
-- Transaction IDs help match queries with responses.
 
 
+# Phase 4: TCP Analysis
 
-# Phase 4: TCP Analysis.
+## Step 1: Apply the TCP Filter:
 
+I cleared the previous filter and entered:
+
+tcp
+
+This displays TCP packets in the capture.
+
+To focus on TCP traffic using port 443, I could use:
+
+tcp.port == 443
+
+Port 443 is commonly used for HTTPS connections over TCP.
+
+Important: Modern websites may also use HTTP/3, which operates over QUIC and UDP. Therefore, not all HTTPS traffic necessarily appears as TCP traffic on port 443.
+
+## Step 2: Examine TCP Packet Details:
+
+I examined the available TCP packets and looked for the following information:
+
+Source and Destination Ports: Identify the ports involved in a connection.
+TCP Flags: Flags such as SYN, ACK, FIN, and RST help indicate connection activity.
+Sequence Numbers: Help TCP track the order of transmitted data.
+Acknowledgment Numbers: Help confirm which data has been received.
+TCP Three-Way Handshake: A connection is typically established using SYN, SYN-ACK, and ACK packets.
+
+Where the relevant packets were present in the capture, I could also examine the TLS handshake associated with an HTTPS connection.
+
+What I Learned
+
+TCP provides reliable, ordered data delivery between applications.
+
+Examining TCP packets helps me understand how connections are established and how devices exchange data. In cybersecurity monitoring, this knowledge can help with network troubleshooting and investigating unusual connection behavior
 
 ![](./img/08.Phase4_TCP_analysis.png)
 
-Steps:
 
-- Clear the filter.
+# Project Conclusion:
 
-- Apply a TCP filter: wiresharktcp Or more specific: wireshark tcp.port == 443    # HTTPS traffic.
+In this project, I used Wireshark to capture and analyze network traffic generated by ping commands and web browsing.
 
-Key Observations:
+I practiced using display filters to isolate ICMP, DNS, and TCP traffic. I also learned how to save a packet capture for later analysis and examine important packet details.
 
-- TCP 3-Way Handshake:
-SYN → SYN-ACK → ACK
+This practical exercise improved my understanding of network communication and introduced me to a tool widely used for network troubleshooting and cybersecurity investigations.
 
-- TCP Flags (SYN, ACK, FIN, RST)
+## Key Takeaways:
+Wireshark can capture and inspect network packets.
+Display filters make it easier to find specific types of traffic.
+ICMP is useful for network diagnostics.
+DNS helps resolve domain names.
+TCP supports reliable communication and uses a three-way handshake to establish connections.
+Packet captures can provide useful evidence when investigating network problems or suspicious activity.
+7. My Learning Outcomes
 
-- Sequence numbers and Acknowledgment numbers.
+After completing this exercise, I gained practical experience in:
 
-- Source and Destination ports (e.g., 443 for HTTPS).
-
-- TLS Handshake (for encrypted HTTPS connections)
-
-
-# 🎯 Conclusion:
-
-This project successfully demonstrated the fundamentals of network traffic analysis using Wireshark.
- By capturing live packets during ICMP pings and web browsing sessions, we were able to isolate and examine key protocols — ICMP, DNS, and TCP — using appropriate display filters.
-
-Through this hands-on exercise, we gained practical insights into how modern networks operate: from simple echo requests and domain name resolutions to the reliable connection-oriented communication provided by TCP.
-
-The ability to capture, filter, and interpret network traffic is an essential skill for network administrators, cybersecurity professionals, and anyone interested in understanding how data flows across the internet.
+Capturing and saving network traffic in Wireshark.
+Applying display filters such as icmp, dns, and tcp.
+Identifying ICMP Echo Requests and Echo Replies.
+Examining DNS queries and responses.
+Understanding basic TCP connection behavior.
+Using packet analysis as an introduction to network troubleshooting and security monitoring.
 
 
-## Final and key takeaways:
+## Cybersecurity Relevance:
 
-Wireshark is a powerful open-source tool for deep packet inspection.
+Network traffic analysis is an important foundational skill for a Security Operations Center (SOC) Analyst.
 
-Proper use of display filters significantly improves analysis efficiency.
-
-Real-world traffic consists of multiple layered protocols working together.
-
-This project serves as a solid foundation for more advanced topics such as TLS decryption, anomaly detection, and network troubleshooting.
-
-
-
-My Learning Outcomes:
-
-- Understood how to capture and save network traffic with Wireshark.
-
-- Learned to use display filters (icmp, dns, tcp)
-Analyzed real-world behavior of ICMP, DNS, and TCP protocols.
-
-- Gained practical experience in network troubleshooting basics.
+By learning how to capture, filter, and interpret packets, I am building the skills needed to investigate network activity, troubleshoot communication issues, and support security investigations.
