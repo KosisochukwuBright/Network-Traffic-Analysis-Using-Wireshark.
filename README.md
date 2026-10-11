@@ -20,7 +20,9 @@ Understand how network traffic analysis can support troubleshooting and cybersec
 
 ## Tools Used
 Wireshark: Used to capture and analyze network packets.
+
 Firefox: Used to generate web traffic by visiting websites.
+
 Linux Terminal: Used to run the ping command and generate ICMP traffic.
 
 
